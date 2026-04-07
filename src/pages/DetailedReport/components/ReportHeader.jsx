@@ -8,7 +8,7 @@ const ReportHeader = () => {
           <span className="text-slate-500 text-sm">Session #1284</span>
         </div>
         <h1 className="text-4xl font-extrabold text-on-surface tracking-tight font-headline">토스(Toss) Product Designer</h1>
-        <p className="text-on-surface-variant text-lg mt-1 font-medium">2024.05.15 · 45분간의 면접 분석 결과</p>
+        <p className="text-on-surface-variant text-lg mt-1 font-medium">2026.04.05 · 45분간의 면접 분석 결과</p>
       </div>
       <div className="flex gap-3">
         <button className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-slate-200 bg-white font-bold text-sm hover:bg-slate-50 transition-all">

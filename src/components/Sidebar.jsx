@@ -4,7 +4,8 @@ const Sidebar = () => {
   const isMain = path === '/';
   const isDashboard = path === '/dashboard';
   const isReport = path === '/report';
-  const isFeedbackOpen = isDashboard || isReport; // Add more conditions later for other feedback pages
+  const isHistory = path === '/history';
+  const isFeedbackOpen = isDashboard || isReport || isHistory; // Add more conditions later for other feedback pages
 
   return (
     <aside className="hidden lg:flex flex-col gap-2 px-4 py-6 h-screen w-64 fixed left-0 top-0 pt-24 bg-slate-50 dark:bg-slate-950 z-40 border-r border-slate-100 dark:border-slate-800">
@@ -27,21 +28,21 @@ const Sidebar = () => {
           </a>
 
           <div className="ml-9 mt-1 space-y-1">
-            <a
-              className={`block px-4 py-2 transition-colors cursor-pointer ${isDashboard ? 'text-sm font-bold text-[#0D99FF] bg-gradient-to-r from-blue-50 dark:from-blue-900/30 to-transparent rounded-r-lg border-l-2 border-[#0D99FF]' : 'text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-[#0D99FF] border-l-2 border-transparent'}`}
+            <a 
+              className={`block px-4 py-2 transition-colors cursor-pointer ${isDashboard ? 'text-sm font-bold text-[#0D99FF] bg-gradient-to-r from-blue-50 dark:from-blue-900/30 to-transparent rounded-r-lg border-l-2 border-[#0D99FF]' : 'text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-[#0D99FF] border-l-2 border-transparent'}`} 
               onClick={() => window.location.href = '/dashboard'}
             >
               대시보드
             </a>
-            <a
-              className={`block px-4 py-2 transition-colors cursor-pointer ${isReport ? 'text-sm font-bold text-[#0D99FF] bg-gradient-to-r from-blue-50 dark:from-blue-900/30 to-transparent rounded-r-lg border-l-2 border-[#0D99FF]' : 'text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-[#0D99FF] border-l-2 border-transparent'}`}
+            <a 
+              className={`block px-4 py-2 transition-colors cursor-pointer ${isReport ? 'text-sm font-bold text-[#0D99FF] bg-gradient-to-r from-blue-50 dark:from-blue-900/30 to-transparent rounded-r-lg border-l-2 border-[#0D99FF]' : 'text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-[#0D99FF] border-l-2 border-transparent'}`} 
               onClick={() => window.location.href = '/report'}
             >
               상세 분석 리포트
             </a>
-            <a
-              className="block px-4 py-2 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-[#0D99FF] transition-colors border-l-2 border-transparent"
-              href="#"
+            <a 
+              className={`block px-4 py-2 transition-colors cursor-pointer ${isHistory ? 'text-sm font-bold text-[#0D99FF] bg-gradient-to-r from-blue-50 dark:from-blue-900/30 to-transparent rounded-r-lg border-l-2 border-[#0D99FF]' : 'text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-[#0D99FF] border-l-2 border-transparent'}`} 
+              onClick={() => window.location.href = '/history'}
             >
               히스토리
             </a>
