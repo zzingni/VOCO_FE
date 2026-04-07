@@ -7,6 +7,7 @@ import History from "./pages/History/History";
 import Community from "./pages/Community/Community";
 import WritePost from "./pages/Community/WritePost";
 import PostDetail from "./pages/Community/PostDetail";
+import Jobs from "./pages/Jobs/Jobs";
 
 function App() {
   // Simple state-based routing for preview purposes
@@ -40,6 +41,10 @@ function App() {
 
   if (currentPath === "/community/post") {
     return <PostDetail />;
+  }
+
+  if (currentPath === "/jobs") {
+    return <Jobs />;
   }
 
   return <Home />;

@@ -7,7 +7,8 @@ const Sidebar = () => {
   const isHistory = path === '/history';
   const isFeedbackOpen = isDashboard || isReport || isHistory; // Add more conditions later for other feedback pages
 
-  const isCommunity = path === '/community';
+  const isCommunity = path.startsWith('/community');
+  const isJobs = path === '/jobs';
 
   return (
     <aside className="hidden lg:flex flex-col gap-2 px-4 py-6 h-screen w-64 fixed left-0 top-0 pt-24 bg-slate-50 dark:bg-slate-950 z-40 border-r border-slate-100 dark:border-slate-800">
@@ -51,15 +52,18 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <a
-          className={`flex items-center gap-3 px-4 py-3 cursor-pointer rounded-xl transition-all duration-200 font-headline text-sm font-semibold ${isCommunity ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:translate-x-1'}`}
+        <a 
+          className={`flex items-center gap-3 px-4 py-3 cursor-pointer rounded-xl transition-all duration-200 font-headline text-sm font-semibold ${isCommunity ? 'bg-white dark:bg-slate-800 text-[#0D99FF] shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:translate-x-1'}`} 
           onClick={() => window.location.href = '/community'}
         >
           <span className="material-symbols-outlined" data-icon="group" style={{ fontVariationSettings: isCommunity ? "'FILL' 1" : undefined }}>group</span>
           <span>커뮤니티</span>
         </a>
-        <a className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-xl transition-transform duration-200 hover:translate-x-1 font-headline text-sm font-semibold" href="#">
-          <span className="material-symbols-outlined" data-icon="work">work</span>
+        <a 
+          className={`flex items-center gap-3 px-4 py-3 cursor-pointer rounded-xl transition-all duration-200 font-headline text-sm font-semibold ${isJobs ? 'bg-white dark:bg-slate-800 text-[#0D99FF] shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:translate-x-1'}`} 
+          onClick={() => window.location.href = '/jobs'}
+        >
+          <span className="material-symbols-outlined" data-icon="work" style={{ fontVariationSettings: isJobs ? "'FILL' 1" : undefined }}>work</span>
           <span>채용정보</span>
         </a>
       </nav>
