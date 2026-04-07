@@ -54,7 +54,9 @@ export default {
         "on-surface": "#191c1d",
         "surface-container-high": "#e7e8e9",
         "on-secondary": "#ffffff",
-        "background": "#f8f9fa"
+        "background": "#f8f9fa",
+        "kakao-yellow": "#FEE500",
+        "voco-mint": "#0D99FF"
       },
       fontFamily: {
         "headline": ["Manrope", "sans-serif"],
