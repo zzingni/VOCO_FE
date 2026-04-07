@@ -10,7 +10,10 @@ const PostCard = ({
   comments 
 }) => {
   return (
-    <article className="group bg-surface-container-lowest p-6 md:p-8 rounded-lg transition-all duration-300 hover:bg-surface-container-high cursor-pointer shadow-sm border border-slate-50">
+    <article 
+      className="group bg-surface-container-lowest p-6 md:p-8 rounded-lg transition-all duration-300 hover:bg-surface-container-high cursor-pointer shadow-sm border border-slate-50"
+      onClick={() => window.location.href = '/community/post'}
+    >
       <div className="flex items-start justify-between mb-4">
         <div className="flex gap-2">
           {badges.map((badge, index) => (

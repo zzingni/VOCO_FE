@@ -6,6 +6,7 @@ import DetailedReport from "./pages/DetailedReport/DetailedReport";
 import History from "./pages/History/History";
 import Community from "./pages/Community/Community";
 import WritePost from "./pages/Community/WritePost";
+import PostDetail from "./pages/Community/PostDetail";
 
 function App() {
   // Simple state-based routing for preview purposes
@@ -35,6 +36,10 @@ function App() {
 
   if (currentPath === "/community/write") {
     return <WritePost />;
+  }
+
+  if (currentPath === "/community/post") {
+    return <PostDetail />;
   }
 
   return <Home />;
