@@ -4,6 +4,7 @@ import Auth from "./pages/Auth/Auth";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import DetailedReport from "./pages/DetailedReport/DetailedReport";
 import History from "./pages/History/History";
+import Community from "./pages/Community/Community";
 
 function App() {
   // Simple state-based routing for preview purposes
@@ -25,6 +26,10 @@ function App() {
 
   if (currentPath === "/history") {
     return <History />;
+  }
+
+  if (currentPath === "/community") {
+    return <Community />;
   }
 
   return <Home />;
