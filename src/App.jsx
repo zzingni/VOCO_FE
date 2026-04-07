@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import DetailedReport from "./pages/DetailedReport/DetailedReport";
 import History from "./pages/History/History";
 import Community from "./pages/Community/Community";
+import WritePost from "./pages/Community/WritePost";
 
 function App() {
   // Simple state-based routing for preview purposes
@@ -30,6 +31,10 @@ function App() {
 
   if (currentPath === "/community") {
     return <Community />;
+  }
+
+  if (currentPath === "/community/write") {
+    return <WritePost />;
   }
 
   return <Home />;

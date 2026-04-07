@@ -9,7 +9,10 @@ const SearchBar = () => {
           type="text" 
         />
       </div>
-      <button className="bg-primary text-on-primary rounded-xl px-4 py-3 flex items-center justify-center gap-2 font-headline font-bold text-sm shadow-sm hover:opacity-90 active:scale-95 transition-all">
+      <button 
+        className="bg-primary text-on-primary rounded-xl px-4 py-3 flex items-center justify-center gap-2 font-headline font-bold text-sm shadow-sm hover:opacity-90 active:scale-95 transition-all"
+        onClick={() => window.location.href = '/community/write'}
+      >
         <span className="material-symbols-outlined text-sm" data-icon="edit">edit</span>
         <span>글쓰기</span>
       </button>
