@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useAudioRecorder from '../../../hooks/useAudioRecorder';
 import { uploadAudio } from '../../../utils/api';
 
-const RecordButton = () => {
+const RecordButton = ({ onUploadSuccess, questionId }) => {
   const { isRecording, error, toggleRecording } = useAudioRecorder();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState('');
@@ -22,8 +22,11 @@ const RecordButton = () => {
         setIsUploading(true);
         setUploadMessage('업로드 중...');
         try {
-          await uploadAudio(blob);
+          await uploadAudio(blob, questionId);
           setUploadMessage('업로드 성공!');
+          if (onUploadSuccess) {
+            onUploadSuccess();
+          }
         } catch (error) {
           setUploadMessage('업로드 실패. 콘솔을 확인해주세요.');
         } finally {
@@ -45,7 +48,7 @@ const RecordButton = () => {
           style={{ backgroundColor: isRecording ? "rgba(239, 68, 68, 0.3)" : "rgba(13, 153, 255, 0.2)" }}
         ></div>
         <button 
-          className={`relative w-64 h-64 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 group
+          className={`relative w-48 h-48 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 group
             ${isRecording ? 'bg-red-500 shadow-red-500/50' : ''}
             ${isUploading ? 'opacity-70 cursor-not-allowed' : ''}
           `} 
@@ -57,15 +60,15 @@ const RecordButton = () => {
         >
           <div className="flex flex-col items-center">
             {isUploading ? (
-              <span className="material-symbols-outlined text-on-primary text-7xl mb-2 animate-spin" style={{ fontVariationSettings: "'FILL' 1" }}>
+              <span className="material-symbols-outlined text-on-primary text-6xl mb-1 animate-spin" style={{ fontVariationSettings: "'FILL' 1" }}>
                 refresh
               </span>
             ) : isRecording ? (
-              <span className="material-symbols-outlined text-on-primary text-7xl mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>
+              <span className="material-symbols-outlined text-on-primary text-6xl mb-1" style={{ fontVariationSettings: "'FILL' 1" }}>
                 stop
               </span>
             ) : (
-              <span className="material-symbols-outlined text-on-primary text-7xl mb-2" data-icon="mic" style={{ fontVariationSettings: "'FILL' 1" }}>
+              <span className="material-symbols-outlined text-on-primary text-6xl mb-1" data-icon="mic" style={{ fontVariationSettings: "'FILL' 1" }}>
                 mic
               </span>
             )}
@@ -73,7 +76,7 @@ const RecordButton = () => {
         </button>
       </div>
       
-      <div className="mt-12 space-y-4">
+      <div className="mt-6 space-y-2">
         {error && (
           <p className="text-red-500 font-bold">{error}</p>
         )}
@@ -82,10 +85,10 @@ const RecordButton = () => {
           <p className="text-primary font-bold">{uploadMessage}</p>
         )}
 
-        <h2 className={`font-black font-headline text-2xl tracking-tight transition-colors duration-300 ${isRecording ? 'text-red-500' : 'text-on-surface'}`}>
+        <h2 className={`font-black font-headline text-xl tracking-tight transition-colors duration-300 ${isRecording ? 'text-red-500' : 'text-on-surface'}`}>
           {isRecording ? "녹음 중입니다..." : "버튼을 눌러 답변을 녹음하세요"}
         </h2>
-        <p className="text-on-surface-variant font-body max-w-sm mx-auto leading-relaxed">
+        <p className="text-on-surface-variant text-sm font-body max-w-sm mx-auto leading-relaxed">
           {isRecording ? (
              "다시 버튼을 누르면 녹음이 종료되고 결과가 분석됩니다."
           ) : (
