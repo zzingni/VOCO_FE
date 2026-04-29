@@ -1,7 +1,71 @@
-const ScoresAndWords = () => {
+import { useMemo } from "react";
+
+const ScoresAndWords = ({ reportsData }) => {
+  const { topWords, displayWords, top3WordsText } = useMemo(() => {
+    const wordCounts = {};
+    if (reportsData?.reports) {
+      reportsData.reports.forEach(report => {
+        if (report.repeated_words) {
+          report.repeated_words.forEach(rw => {
+            // Ensure rw.word is a valid string, even if null/undefined
+            const wordStr = String(rw.word || "");
+            if (wordStr.trim() !== "") {
+              const countNum = Number(rw.count || 0);
+              wordCounts[wordStr] = (wordCounts[wordStr] || 0) + countNum;
+            }
+          });
+        }
+      });
+    }
+
+    const sortedWords = Object.keys(wordCounts)
+      .map(word => ({ word, count: wordCounts[word] }))
+      .sort((a, b) => b.count - a.count);
+
+    const topWords = sortedWords.slice(0, 20);
+    
+    const top3 = topWords.slice(0, 3).map(w => w.word);
+    let top3WordsText = "";
+    if (top3.length > 0) {
+      top3WordsText = `"${top3.join('", "')}" 단어를 주력으로 사용하셨습니다.`;
+    }
+
+    const displayWords = [...topWords].sort((a, b) => a.word.localeCompare(b.word));
+
+    return { topWords, displayWords, top3WordsText };
+  }, [reportsData]);
+
+  const sizes = ["text-xs", "text-sm", "text-base", "text-lg", "text-xl", "text-2xl", "text-3xl"];
+  const weights = ["font-medium", "font-medium", "font-semibold", "font-bold", "font-bold", "font-extrabold", "font-black"];
+  const colors = [
+    "text-primary", "text-secondary", "text-tertiary", 
+    "text-slate-600", "text-primary/70", "text-slate-500", "text-slate-400"
+  ];
+
+  const maxCount = topWords.length > 0 ? topWords[0].count : 1;
+  const minCount = topWords.length > 0 ? topWords[topWords.length - 1].count : 0;
+
+  const getStyleClasses = (count, word) => {
+    let sizeIndex = 0;
+    if (maxCount > minCount) {
+      const ratio = (count - minCount) / (maxCount - minCount);
+      sizeIndex = Math.floor(ratio * (sizes.length - 1));
+    } else {
+      sizeIndex = Math.floor((sizes.length - 1) / 2);
+    }
+
+    const sizeClass = sizes[sizeIndex] || sizes[0];
+    const weightClass = weights[sizeIndex] || weights[0];
+    
+    const safeWord = String(word || "");
+    const charSum = safeWord.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    const colorClass = colors[charSum % colors.length];
+
+    return `${sizeClass} ${weightClass} ${colorClass}`;
+  };
+
   return (
     <div className="flex flex-col gap-8">
-      {/* Confidence & Attitude Scores */}
       <section className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
         <h2 className="text-xl font-bold mb-8 font-headline">비언어적 요소 점수</h2>
         <div className="space-y-8">
@@ -29,25 +93,31 @@ const ScoresAndWords = () => {
         </div>
       </section>
 
-      {/* Repeated Words (Word Cloud Style) */}
       <section className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
         <h2 className="text-xl font-bold mb-6 font-headline">자주 사용한 단어</h2>
-        <div className="flex flex-wrap gap-2 items-center justify-center p-4">
-          <span className="text-3xl font-black text-primary hover:scale-110 transition-transform cursor-default">사용자</span>
-          <span className="text-xl font-bold text-slate-600 hover:scale-110 transition-transform cursor-default">디자인</span>
-          <span className="text-sm font-medium text-slate-400 hover:scale-110 transition-transform cursor-default">해결</span>
-          <span className="text-2xl font-extrabold text-secondary hover:scale-110 transition-transform cursor-default">문제</span>
-          <span className="text-base font-semibold text-slate-500 hover:scale-110 transition-transform cursor-default">성장</span>
-          <span className="text-lg font-bold text-primary hover:scale-110 transition-transform cursor-default">경험</span>
-          <span className="text-xs font-medium text-slate-400 hover:scale-110 transition-transform cursor-default">비즈니스</span>
-          <span className="text-2xl font-black text-tertiary hover:scale-110 transition-transform cursor-default">협업</span>
-          <span className="text-sm font-semibold text-slate-500 hover:scale-110 transition-transform cursor-default">프로세스</span>
-          <span className="text-base font-bold text-slate-600 hover:scale-110 transition-transform cursor-default">피드백</span>
-          <span className="text-xl font-extrabold text-primary/70 hover:scale-110 transition-transform cursor-default">데이터</span>
-        </div>
-        <div className="mt-6">
-          <p className="text-xs text-slate-400 font-medium text-center italic">"사용자", "문제", "협업" 단어를 주력으로 사용하셨습니다.</p>
-        </div>
+        
+        {displayWords.length > 0 ? (
+          <>
+            <div className="flex flex-wrap gap-3 items-center justify-center p-4">
+              {displayWords.map((item) => (
+                <span 
+                  key={item.word} 
+                  className={`${getStyleClasses(item.count, item.word)} hover:scale-110 transition-transform cursor-default`}
+                  title={`출현 빈도: ${item.count}회`}
+                >
+                  {item.word}
+                </span>
+              ))}
+            </div>
+            <div className="mt-6">
+              <p className="text-xs text-slate-400 font-medium text-center italic">{top3WordsText}</p>
+            </div>
+          </>
+        ) : (
+          <div className="py-8 text-center text-sm text-slate-400">
+            분석된 자주 사용한 단어 데이터가 없습니다.
+          </div>
+        )}
       </section>
     </div>
   );

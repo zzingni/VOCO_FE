@@ -59,7 +59,7 @@ const DetailedReport = () => {
           </div>
 
           {/* Right Column: Scores & Word Cloud */}
-          <ScoresAndWords />
+          <ScoresAndWords reportsData={reportsData} />
         </div>
       </div>
       
