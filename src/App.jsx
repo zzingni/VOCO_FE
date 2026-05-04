@@ -8,6 +8,7 @@ import Community from "./pages/Community/Community";
 import WritePost from "./pages/Community/WritePost";
 import PostDetail from "./pages/Community/PostDetail";
 import Jobs from "./pages/Jobs/Jobs";
+import MyPage from "./pages/MyPage/MyPage";
 
 function App() {
   // Simple state-based routing for preview purposes
@@ -45,6 +46,10 @@ function App() {
 
   if (currentPath === "/jobs") {
     return <Jobs />;
+  }
+
+  if (currentPath === "/mypage") {
+    return <MyPage />;
   }
 
   return <Home />;
