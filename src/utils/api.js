@@ -3,47 +3,92 @@
  * @param {Blob} audioBlob 업로드할 오디오 파일 (WAV 포맷)
  * @returns {Promise<any>} 서버의 응답
  */
-export const uploadAudio = async (audioBlob, questionId) => {
-  // 백엔드 API URL (임시)
-  const API_URL = import.meta.env.VITE_API_URL || '/api/v1/audio/stt';
+/**
+ * 서버에 음성 파일을 업로드하고 STT 및 피드백을 요청하는 함수
+ * @param {Blob} audioBlob - 녹음된 오디오 Blob
+ * @param {number|string} questionId - 현재 질문의 ID
+ * @param {number|string} interviewId - 현재 진행 중인 면접의 ID
+ * @returns {Promise<Object>} 서버 응답 결과 (STT 텍스트, 피드백 등)
+ */
+export const uploadAudio = async (audioBlob, questionId, interviewId) => {
+  const API_URL = '/api/v1/audio/stt';
 
   const formData = new FormData();
-
-  // 'file'이라는 필드명으로 .wav 파일 추가 (백엔드 파라미터명과 일치해야 함)
+  // 백엔드가 기대하는 파라미터명과 일치해야 함
   const filename = `record_${new Date().getTime()}.wav`;
   formData.append('file', audioBlob, filename);
 
-  // question_id 추가
-  if (questionId) {
-    formData.append('question_id', questionId);
-  }
+  if (questionId) formData.append('question_id', questionId);
+  if (interviewId) formData.append('interview_id', interviewId);
 
   try {
     const response = await fetch(API_URL, {
       method: 'POST',
-      // fetch 사용시 FormData를 보낼때 Content-Type을 설정하지 않으면 
-      // 브라우저가 자동으로 multipart/form-data와 올바른 boundary를 설정해줍니다.
-      body: formData,
+      body: formData, // FormData는 브라우저가 자동으로 multipart/form-data 헤더를 설정함
     });
 
     if (!response.ok) {
-      throw new Error(`서버 에러 발생: ${response.status}`);
+      throw new Error(`Upload failed with status: ${response.status}`);
     }
 
     const data = await response.json();
+    console.log('Upload successful:', data);
     return data;
   } catch (error) {
-    console.error('Audio upload failed:', error);
+    console.error('Audio upload error:', error);
     throw error;
   }
 };
 
 /**
+ * 면접 세션을 새로 시작하는 함수
+ * @param {number|string} fieldId - 선택된 분야 ID
+ * @returns {Promise<Object>} { message, interview_id }
+ */
+export const startInterview = async (fieldId) => {
+  // 백엔드에서 interview 테이블에 field_id를 저장해야 하므로 파라미터로 전달
+  const API_URL = fieldId ? `/api/v1/interview/start?field_id=${fieldId}` : '/api/v1/interview/start';
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST'
+    });
+    if (!response.ok) throw new Error('면접 시작 실패');
+    return await response.json();
+  } catch (error) {
+    console.error('Start interview error:', error);
+    throw error;
+  }
+};
+
+/**
+ * 진행 중인 면접 세션을 종료하는 함수
+ * @param {number|string} interviewId - 종료할 면접 ID
+ * @returns {Promise<Object>} { message, interview_id }
+ */
+export const endInterview = async (interviewId) => {
+  if (!interviewId) return;
+  const API_URL = `/api/v1/interview/end/${interviewId}`;
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST'
+    });
+    if (!response.ok) throw new Error('면접 종료 실패');
+    return await response.json();
+  } catch (error) {
+    console.error('End interview error:', error);
+  }
+};
+
+/**
  * 서버에서 질문 목록을 가져오는 함수
+ * @param {number|string} fieldId - (선택) 질문을 가져올 분야 ID
  * @returns {Promise<Array>} 질문 목록
  */
-export const fetchQuestions = async () => {
-  const API_URL = '/api/v1/questions';
+export const fetchQuestions = async (fieldId = null) => {
+  // 백엔드 API 명세에 맞춰 fieldId 쿼리스트링 사용
+  const API_URL = fieldId ? `/api/v1/questions?fieldId=${fieldId}` : '/api/v1/questions';
 
   try {
     const response = await fetch(API_URL);
@@ -54,6 +99,26 @@ export const fetchQuestions = async () => {
     return data;
   } catch (error) {
     console.error('Questions fetch failed:', error);
+    throw error;
+  }
+};
+
+/**
+ * 서버에서 면접 분야 목록을 가져오는 함수
+ * @returns {Promise<Array>} 분야 목록
+ */
+export const fetchFields = async () => {
+  const API_URL = 'api/v1/field';
+
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+      throw new Error(`서버 에러 발생: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Fields fetch failed:', error);
     throw error;
   }
 };
@@ -74,6 +139,27 @@ export const fetchAllReports = async () => {
     return data;
   } catch (error) {
     console.error('All reports fetch failed:', error);
+    throw error;
+  }
+};
+
+/**
+ * 서버에서 면접 히스토리를 가져오는 함수
+ * @returns {Promise<Object>} 히스토리 데이터
+ */
+export const fetchInterviewHistory = async () => {
+  // 백엔드 명세에 따른 라우터 주소
+  const API_URL = '/api/v1/interview/history';
+
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+      throw new Error(`서버 에러 발생: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('History fetch failed:', error);
     throw error;
   }
 };

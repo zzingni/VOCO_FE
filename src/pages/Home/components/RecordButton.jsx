@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useAudioRecorder from '../../../hooks/useAudioRecorder';
 import { uploadAudio } from '../../../utils/api';
 
-const RecordButton = ({ onUploadSuccess, questionId }) => {
+const RecordButton = ({ onUploadSuccess, questionId, interviewId }) => {
   const { isRecording, error, toggleRecording } = useAudioRecorder();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState('');
@@ -22,7 +22,7 @@ const RecordButton = ({ onUploadSuccess, questionId }) => {
         setIsUploading(true);
         setUploadMessage('업로드 중...');
         try {
-          await uploadAudio(blob, questionId);
+          await uploadAudio(blob, questionId, interviewId);
           setUploadMessage('업로드 성공!');
           if (onUploadSuccess) {
             onUploadSuccess();

@@ -41,13 +41,13 @@ const AIFeedback = ({ reportsData, questionsMap }) => {
         <div className="pt-2">
           <h4 className="font-bold mb-4 font-headline">답변 상세 분석</h4>
           <div className="flex flex-col gap-4">
-            {reports.map((item, index) => {
-              const { answer, feedback } = item;
-              const questionContent = questionsMap[answer.question_id] || `질문 ${answer.question_id} (내용을 불러올 수 없습니다)`;
-              const isOpen = openAnswerIds[answer.id] || false;
+            {reports.flatMap(r => r.answers || []).map((answer, index) => {
+              const { feedback, question, text, answer_id } = answer;
+              const questionContent = question || `질문 ${answer.question_id}`;
+              const isOpen = openAnswerIds[answer_id] || false;
 
               return (
-                <div key={answer.id} className="flex flex-col p-4 rounded-xl border border-slate-100 bg-white hover:border-primary/30 transition-colors">
+                <div key={answer_id} className="flex flex-col p-4 rounded-xl border border-slate-100 bg-white hover:border-primary/30 transition-colors">
                   <div className="flex gap-4 items-start">
                     <div className="text-primary font-black text-lg font-headline mt-1">Q{index + 1}</div>
                     <div className="flex-1">
@@ -68,7 +68,7 @@ const AIFeedback = ({ reportsData, questionsMap }) => {
 
                       <div className="mt-4 pt-4 border-t border-slate-100">
                         <button 
-                          onClick={() => toggleAnswer(answer.id)}
+                          onClick={() => toggleAnswer(answer_id)}
                           className="flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-primary transition-colors group"
                         >
                           <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-y-0.5" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0)' }} data-icon="expand_more">
@@ -79,7 +79,7 @@ const AIFeedback = ({ reportsData, questionsMap }) => {
                         
                         <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 mt-3' : 'max-h-0 opacity-0'}`}>
                           <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm text-slate-700 leading-relaxed break-keep">
-                            {answer?.text || "답변 내용이 없습니다."}
+                            {text || "답변 내용이 없습니다."}
                           </div>
                         </div>
                       </div>

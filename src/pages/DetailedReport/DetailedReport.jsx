@@ -16,21 +16,8 @@ const DetailedReport = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [reports, questions] = await Promise.all([
-          fetchAllReports(),
-          fetchQuestions()
-        ]);
-        
+        const reports = await fetchAllReports();
         setReportsData(reports);
-        
-        // 질문 목록을 id를 키로 하는 객체로 변환하여 찾기 쉽게 만듦
-        const qMap = {};
-        if (Array.isArray(questions)) {
-          questions.forEach(q => {
-            qMap[q.id] = q.content;
-          });
-        }
-        setQuestionsMap(qMap);
       } catch (error) {
         console.error("Failed to load report data", error);
       } finally {

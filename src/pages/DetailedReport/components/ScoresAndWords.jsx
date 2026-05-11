@@ -5,13 +5,17 @@ const ScoresAndWords = ({ reportsData }) => {
     const wordCounts = {};
     if (reportsData?.reports) {
       reportsData.reports.forEach(report => {
-        if (report.repeated_words) {
-          report.repeated_words.forEach(rw => {
-            // Ensure rw.word is a valid string, even if null/undefined
-            const wordStr = String(rw.word || "");
-            if (wordStr.trim() !== "") {
-              const countNum = Number(rw.count || 0);
-              wordCounts[wordStr] = (wordCounts[wordStr] || 0) + countNum;
+        if (report.answers) {
+          report.answers.forEach(answer => {
+            if (answer.repeated_words) {
+              answer.repeated_words.forEach(rw => {
+                // Ensure rw.word is a valid string, even if null/undefined
+                const wordStr = String(rw.word || "");
+                if (wordStr.trim() !== "") {
+                  const countNum = Number(rw.count || 0);
+                  wordCounts[wordStr] = (wordCounts[wordStr] || 0) + countNum;
+                }
+              });
             }
           });
         }
