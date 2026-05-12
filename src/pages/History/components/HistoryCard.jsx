@@ -1,6 +1,9 @@
-const HistoryCard = ({ date, title, subtitle, score, status, statusColor, bgColor, textColor, icon, buttonText, buttonIcon, buttonStyle, isButtonDisabled }) => {
+const HistoryCard = ({ date, title, subtitle, score, status, statusColor, bgColor, textColor, icon, buttonText, buttonIcon, buttonStyle, isButtonDisabled, onClick }) => {
   return (
-    <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-slate-50 flex flex-col md:flex-row items-center gap-6 hover:bg-slate-50 transition-colors group cursor-pointer">
+    <div 
+      className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-slate-50 flex flex-col md:flex-row items-center gap-6 hover:bg-slate-50 transition-colors group cursor-pointer"
+      onClick={onClick}
+    >
       <div className={`w-16 h-16 rounded-full ${bgColor} flex items-center justify-center ${textColor} shrink-0`}>
         <span className="material-symbols-outlined text-3xl" data-icon={icon}>{icon}</span>
       </div>

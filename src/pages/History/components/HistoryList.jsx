@@ -75,7 +75,15 @@ const HistoryList = () => {
     <div className="space-y-4">
       {histories.length > 0 ? (
         histories.map((data, index) => (
-          <HistoryCard key={data.id || index} {...data} />
+          <HistoryCard 
+            key={data.id || index} 
+            {...data} 
+            onClick={() => {
+              if (data.status === "완료됨") {
+                window.location.href = `/report?interview_id=${data.id}`;
+              }
+            }} 
+          />
         ))
       ) : (
         <div className="w-full flex justify-center py-20 bg-surface-container-lowest rounded-xl border border-slate-100">

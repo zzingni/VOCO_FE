@@ -46,12 +46,17 @@ export const uploadAudio = async (audioBlob, questionId, interviewId) => {
  * @returns {Promise<Object>} { message, interview_id }
  */
 export const startInterview = async (fieldId) => {
-  // 백엔드에서 interview 테이블에 field_id를 저장해야 하므로 파라미터로 전달
-  const API_URL = fieldId ? `/api/v1/interview/start?field_id=${fieldId}` : '/api/v1/interview/start';
+  const API_URL = '/api/v1/interview/start';
+
+  const formData = new FormData();
+  if (fieldId) {
+    formData.append('field_id', fieldId);
+  }
 
   try {
     const response = await fetch(API_URL, {
-      method: 'POST'
+      method: 'POST',
+      body: formData,
     });
     if (!response.ok) throw new Error('면접 시작 실패');
     return await response.json();
@@ -108,7 +113,7 @@ export const fetchQuestions = async (fieldId = null) => {
  * @returns {Promise<Array>} 분야 목록
  */
 export const fetchFields = async () => {
-  const API_URL = 'api/v1/field';
+  const API_URL = '/api/v1/field';
 
   try {
     const response = await fetch(API_URL);
@@ -119,6 +124,27 @@ export const fetchFields = async () => {
     return data;
   } catch (error) {
     console.error('Fields fetch failed:', error);
+    throw error;
+  }
+};
+
+/**
+ * 서버에서 특정 면접의 상세 분석 리포트를 가져오는 함수
+ * @param {number|string} interviewId
+ * @returns {Promise<any>} 리포트 데이터
+ */
+export const fetchReportDetail = async (interviewId) => {
+  const API_URL = `/api/v1/reports/${interviewId}`;
+
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+      throw new Error(`서버 에러 발생: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Report fetch failed for id ${interviewId}:`, error);
     throw error;
   }
 };

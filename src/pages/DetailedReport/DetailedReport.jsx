@@ -6,7 +6,7 @@ import AIFeedback from "./components/AIFeedback";
 import VoiceAnalysis from "./components/VoiceAnalysis";
 import ScoresAndWords from "./components/ScoresAndWords";
 import FloatingMicrophone from "./components/FloatingMicrophone";
-import { fetchAllReports, fetchQuestions } from "../../utils/api";
+import { fetchAllReports, fetchReportDetail, fetchQuestions } from "../../utils/api";
 
 const DetailedReport = () => {
   const [reportsData, setReportsData] = useState(null);
@@ -16,8 +16,19 @@ const DetailedReport = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const reports = await fetchAllReports();
-        setReportsData(reports);
+        const urlParams = new URLSearchParams(window.location.search);
+        const interviewId = urlParams.get("interview_id");
+
+        if (interviewId) {
+          const report = await fetchReportDetail(interviewId);
+          setReportsData({
+            count: report.answers ? report.answers.length : 0,
+            reports: [report]
+          });
+        } else {
+          const reports = await fetchAllReports();
+          setReportsData(reports);
+        }
       } catch (error) {
         console.error("Failed to load report data", error);
       } finally {
