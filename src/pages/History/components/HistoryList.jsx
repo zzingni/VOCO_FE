@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import HistoryCard from "./HistoryCard";
 import { fetchInterviewHistory } from "../../../utils/api";
 
-const HistoryList = () => {
+const HistoryList = ({ onMetricsLoad }) => {
   const [histories, setHistories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -11,7 +11,14 @@ const HistoryList = () => {
       try {
         const data = await fetchInterviewHistory();
         
-        if (data && data.histories) {
+        if (data) {
+          if (onMetricsLoad) {
+            onMetricsLoad({
+              overallAverage: data.overall_average || 0,
+              thisMonthCount: data.this_month_count || 0
+            });
+          }
+          if (data.histories) {
           // 백엔드 데이터를 UI 모델에 맞게 변환
           const mappedData = data.histories.map(item => {
             const dateObj = new Date(item.interview_date);
@@ -52,6 +59,7 @@ const HistoryList = () => {
             };
           });
           setHistories(mappedData);
+          }
         }
       } catch (error) {
         console.error("Failed to load interview history:", error);

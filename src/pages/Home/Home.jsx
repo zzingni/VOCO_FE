@@ -50,21 +50,34 @@ const Home = () => {
     }
     
     setIsLoading(true);
+    setCurrentInterviewId(null); // 새로운 세션을 위해 이전 ID 초기화
     try {
-      // 1. Start Interview to get ID
-      const startResult = await startInterview(selectedFieldId);
-      setCurrentInterviewId(startResult.interview_id);
-
-      // 2. Fetch questions specific to the selected field
+      // 1. Fetch questions specific to the selected field
       const questionsData = await fetchQuestions(selectedFieldId);
       setQuestions(questionsData);
       setCurrentQuestionIndex(0);
       setIsInterviewStarted(true);
     } catch (error) {
       console.error("Failed to start interview:", error);
-      alert("면접을 시작하는데 실패했습니다.");
+      alert("면접 질문을 불러오는데 실패했습니다.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const getOrCreateInterviewId = async () => {
+    if (currentInterviewId) {
+      return currentInterviewId;
+    }
+    
+    try {
+      const startResult = await startInterview(selectedFieldId);
+      setCurrentInterviewId(startResult.interview_id);
+      return startResult.interview_id;
+    } catch (error) {
+      console.error("Failed to start interview session:", error);
+      alert("면접 세션을 생성하는데 실패했습니다.");
+      return null;
     }
   };
 
@@ -146,6 +159,7 @@ const Home = () => {
                   onUploadSuccess={handleNextQuestion} 
                   questionId={currentQuestion?.id} 
                   interviewId={currentInterviewId}
+                  onStartRecording={getOrCreateInterviewId}
                 />
                 
                 <div className="mt-6 mb-8">

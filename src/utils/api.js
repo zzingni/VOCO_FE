@@ -150,11 +150,11 @@ export const fetchReportDetail = async (interviewId) => {
 };
 
 /**
- * 서버에서 모든 상세 분석 리포트를 가져오는 함수
- * @returns {Promise<any>} 리포트 데이터 목록
+ * 서버에서 가장 최신의 상세 분석 리포트를 가져오는 함수
+ * @returns {Promise<any>} 리포트 데이터
  */
-export const fetchAllReports = async () => {
-  const API_URL = `/api/v1/reports/all`;
+export const fetchLatestReport = async () => {
+  const API_URL = `/api/v1/reports/latest`;
 
   try {
     const response = await fetch(API_URL);
@@ -164,7 +164,7 @@ export const fetchAllReports = async () => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('All reports fetch failed:', error);
+    console.error('Latest report fetch failed:', error);
     throw error;
   }
 };
@@ -186,6 +186,36 @@ export const fetchInterviewHistory = async () => {
     return data;
   } catch (error) {
     console.error('History fetch failed:', error);
+    throw error;
+  }
+};
+
+/**
+ * 백엔드 서버로 카카오 엑세스 토큰을 전송하여 로그인/회원가입 처리
+ * @param {string} accessToken 카카오 엑세스 토큰
+ * @returns {Promise<Object>} 회원 정보
+ */
+export const kakaoLoginAPI = async (accessToken) => {
+  const API_URL = '/api/v1/auth/kakao';
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ access_token: accessToken }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`서버 에러 발생: ${response.status} - ${errorData.detail || '알 수 없는 오류'}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Kakao login failed:', error);
     throw error;
   }
 };

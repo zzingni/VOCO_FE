@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useAudioRecorder from '../../../hooks/useAudioRecorder';
 import { uploadAudio } from '../../../utils/api';
 
-const RecordButton = ({ onUploadSuccess, questionId, interviewId }) => {
+const RecordButton = ({ onUploadSuccess, questionId, interviewId, onStartRecording }) => {
   const { isRecording, error, toggleRecording } = useAudioRecorder();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState('');
@@ -14,6 +14,16 @@ const RecordButton = ({ onUploadSuccess, questionId, interviewId }) => {
     if (!isRecording) {
       // 녹음 시작
       setUploadMessage('');
+      
+      let currentInterviewId = interviewId;
+      if (onStartRecording && !currentInterviewId) {
+        currentInterviewId = await onStartRecording();
+        if (!currentInterviewId) {
+          setUploadMessage('면접 세션을 시작할 수 없습니다.');
+          return;
+        }
+      }
+
       await toggleRecording();
     } else {
       // 녹음 중지

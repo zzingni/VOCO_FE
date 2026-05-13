@@ -1,4 +1,4 @@
-const HistoryHeader = () => {
+const HistoryHeader = ({ overallAverage = 0, thisMonthCount = 0 }) => {
   return (
     <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
       <div>
@@ -8,11 +8,11 @@ const HistoryHeader = () => {
       <div className="flex items-center space-x-2">
         <span className="bg-[#d8e2ff] text-[#001a41] px-4 py-2 rounded-full text-sm font-semibold flex items-center">
           <span className="material-symbols-outlined mr-1 text-sm" data-icon="bar_chart">bar_chart</span>
-          평균 점수: 88점
+          평균 점수: {overallAverage}점
         </span>
         <span className="px-4 py-2 rounded-full text-sm font-semibold flex items-center" style={{backgroundColor: 'rgba(13, 153, 255, 0.1)', color: '#0D99FF'}}>
           <span className="material-symbols-outlined mr-1 text-sm" data-icon="calendar_month">calendar_month</span>
-          이번 달: 5회
+          이번 달: {thisMonthCount}회
         </span>
       </div>
     </div>

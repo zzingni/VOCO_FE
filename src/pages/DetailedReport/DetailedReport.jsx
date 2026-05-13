@@ -6,7 +6,7 @@ import AIFeedback from "./components/AIFeedback";
 import VoiceAnalysis from "./components/VoiceAnalysis";
 import ScoresAndWords from "./components/ScoresAndWords";
 import FloatingMicrophone from "./components/FloatingMicrophone";
-import { fetchAllReports, fetchReportDetail, fetchQuestions } from "../../utils/api";
+import { fetchReportDetail, fetchLatestReport, fetchQuestions } from "../../utils/api";
 
 const DetailedReport = () => {
   const [reportsData, setReportsData] = useState(null);
@@ -26,8 +26,12 @@ const DetailedReport = () => {
             reports: [report]
           });
         } else {
-          const reports = await fetchAllReports();
-          setReportsData(reports);
+          const report = await fetchLatestReport();
+          // Wrap the latest report in the same format
+          setReportsData({
+            count: report.answers ? report.answers.length : 0,
+            reports: [report]
+          });
         }
       } catch (error) {
         console.error("Failed to load report data", error);
